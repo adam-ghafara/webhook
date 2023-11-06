@@ -26,4 +26,4 @@ Pastikan samakan Entry Point dengan functions.HTTP pada func init().
 
 ![Gambar 2](./image/Screenshot%202023-11-06%20101804.png)
 
-Deploy dan lihat hasilnya. Selanjutnya silahkan dicoba menggunakan Swagger.
+Deploy dan lihat hasilnya. Selanjutnya silahkan dicoba di [APIDocs](wa.my.id/apidocs).
