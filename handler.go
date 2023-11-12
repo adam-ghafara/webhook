@@ -30,7 +30,7 @@ func Post(w http.ResponseWriter, r *http.Request) {
 			dt := &wa.TextMessage{
 				To:       msg.Phone_number,
 				IsGroup:  false,
-				Messages: "Hallo! Saudara/Saudari " + msg.Alias_name + ". Ini adalah pesan otomatis karena sedang praktek webhook, mohon di maklumi jika anda kena spam dengan pesan ini. Silahkan di mute jika mendapat pesan ini terus menerus. " + "Ini adalah Tutorial Untuk penggunaan whatsauth ini. Terima Kasih" + "Link :",
+				Messages: "Hallo! Saudara/Saudari " + msg.Alias_name + ". Ini adalah pesan otomatis karena sedang praktek webhook, mohon di maklumi jika anda kena spam dengan pesan ini. Silahkan di mute jika mendapat pesan ini terus menerus. " + "Ini adalah Tutorial Untuk penggunaan whatsauth ini. Terima Kasih. " + "Link : https://medium.com/@adam.ghafara.job/whatsauth-gateway-bcdfb194f08e",
 			}
 			resp, _ = atapi.PostStructWithToken[atmessage.Response]("Token", os.Getenv("TOKEN"), dt, "https://api.wa.my.id/api/send/message/text")
 		}
