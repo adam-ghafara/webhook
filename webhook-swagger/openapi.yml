@@ -1,0 +1,252 @@
+openapi: 3.0.3
+info:
+  title: API DOCS FOR WHATSAUTH
+  description: >-
+    Penjelasan tata cara pemakaian API dari Whatsauth
+  termsOfService: https://whatsauth.my.id
+  contact:
+    email: adam.ghafara.job@gmail.com
+  license:
+    name: Webhook Link
+    url: https://github.com/adam-ghafara/webhook
+  version: v1.0.0
+externalDocs:
+  description: Daftar Dulu Nomor WA Anda Kesini Sebelum mencoba
+  url: https://wa.my.id
+servers:
+  - url: https://api.wa.my.id/api
+  - url: https://cloud.wa.my.id/api
+tags:
+  - name: signup
+    description: Melakukan pendaftaran dengan input URL WebHook dan Secret WebHook
+    externalDocs:
+      description: Contoh Kode WebHook
+      url: https://github.com/whatsauth/webhook
+  - name: device
+    description: Set whatsapp yg digunakan
+    externalDocs:
+      description: Tata cara input kode
+      url: https://faq.whatsapp.com/1324084875126592
+  - name: message
+    description: Mengirim pesan ke tujuan
+    externalDocs:
+      description: Contoh Kode Program
+      url: https://github.com/whatsauth/webhook/blob/09c999be72e25660395f27c879456938a57561d1/function.go#L36C9-L36C9
+  - name: whatsauth
+    description: Get Token and Authorize
+paths:
+  /signup:
+    post:
+      tags:
+        - signup
+      summary: Pendaftaran User Baru
+      description: Melakukan pendaftaran dengan input URL WebHook dan Secret WebHook dan Mendapatkan Token yang baru yang berlaku selama 30 hari
+      operationId: signUpNewUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebHook'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAccount'
+        '405':
+          description: Invalid input
+      security:
+        - token:
+            - write:apiKey
+            - read:apiKey
+  /device/{token}:
+    get:
+      tags:
+        - device
+      summary: Add device Whatsapp
+      description: Menambahkan wa user ke server untuk dipakai oleh api dengan memasukkan code dari respon server
+      operationId: getDevice
+      parameters:
+        - in: path
+          name: token
+          schema:
+            type: string
+          required: true
+          description: Token yang diberikan kepada user
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceResponse'
+        '400':
+          description: Invalid status value
+  /start/device/{token}:
+    get:
+      tags:
+        - device
+      summary: Start device Whatsapp setelah di daftarkan
+      description: Jika tidak di start maka pengiriman pesan gagal, permintaan start device bisa dilakukan disini.
+      operationId: resetDevice
+      parameters:
+        - in: path
+          name: token
+          schema:
+            type: string
+          required: true
+          description: Token yang diberikan kepada user
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceResponse'
+        '400':
+          description: Invalid status value
+  /send/message/text:
+    post:
+      tags:
+        - message
+      summary: Kirim pesan teks
+      description: Mengirimkan pesan teks kepada perorangan atau group
+      operationId: sendMesageText
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TextMessage'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TextMessageResponse'
+        '405':
+          description: Invalid input
+      security:
+        - token:
+            - write:apiKey
+            - read:apiKey
+  /whatsauth/request:
+    post:
+      tags:
+        - whatsauth
+      summary: Permintaan otorisasi aplikasi
+      description: Mengirimkan token otorisasi pada user
+      operationId: whatsauthRequest
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WhatsAuth'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TextMessageResponse'
+        '405':
+          description: Invalid input
+      security:
+        - token:
+            - write:apiKey
+            - read:apiKey
+components:
+  schemas:
+    WebHook:
+          type: object
+          properties:
+            url: 
+              type: string
+              example: https://webhook.com
+            secret: 
+              type: string
+              example: isju8ekf9ke
+    UserAccount:
+      type: object
+      properties:
+        phonenumber:
+          type: string
+          example: 6281111
+        webhook:
+          type: object
+          properties:
+            url: 
+              type: string
+              example: https://webhook.com
+            secret: 
+              type: string
+              example: isju8ekf9ke
+        token:
+          type: string
+          example: v4.public.asoiduas
+    TextMessage:
+      type: object
+      properties:
+        to:
+          type: string
+          example: 6281111
+        isgroup:
+          type: bool
+          example: false
+        messages:
+          type: string
+          example: hai kak
+    WhatsAuth:
+      type: object
+      properties:
+        uuid:
+          type: string
+          example: isodjaoidsjaoid
+        phonenumber:
+          type: string
+          example: 6281212
+        delay:
+          type: int
+          example: 2
+    TextMessageResponse:
+      type: object
+      properties:
+        response:
+          type: string
+          example: 3EB05B55C862B68AF58C97
+    DeviceResponse:
+      type: object
+      properties:
+        phonenumber:
+          type: string
+          example: 628888888
+        status:
+          type: bool
+          example: false
+        code:
+          type: string
+          example: RGCF-L1LH
+        message:
+          type: string
+          example: Pair Code Device
+  requestBodies:
+    TextMessageReq:
+      description: Kirim Pesan teks
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TextMessage'
+    TextMessageResp:
+      description: Respon dari request
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/TextMessageResponse'
+  securitySchemes:
+    token:
+      type: apiKey
+      name: token
+      in: header
